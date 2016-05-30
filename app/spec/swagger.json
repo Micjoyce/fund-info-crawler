@@ -1,0 +1,803 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "version": "1.0.0",
+        "title": "Swagger dotwealth (Simple)",
+        "description": "for dotwealth 1.0 app",
+        "termsOfService": "http://dotwealth.com.cn"
+    },
+    "host": "dotwealth.com.cn",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "consumes": [
+        "application/json"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/collections": {
+            "get": {
+                "description": "1.0 返回所有该用户的组合",
+                "operationId": "findCollections",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "collections response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/collection"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "创建一个新的组合",
+                "operationId": "createCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "collection",
+                        "in": "body",
+                        "description": "创建组合所需的参数",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/newCollectionParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "saved collection response",
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{id}": {
+            "get": {
+                "description": "1.1 用组合ID定位并返回组合数据",
+                "operationId": "findCollectionById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合的 ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "collection response",
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "根据资产类别配置，批量做记账更新记录。此操作主要在采用推荐方案之后，所进行。",
+                "operationId": "acceptSuggestedCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合id",
+                        "type": "integer"
+                    },
+                    {
+                        "name": "collection",
+                        "in": "body",
+                        "description": "最新组合所需的参数",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/newCollectionParam"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "saved collection response",
+                        "schema": {
+                            "$ref": "#/definitions/collection"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "description": "1.1 删除某个组合",
+                "operationId": "deleteCollection",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合ID",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "组合被删除"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{id}/performance": {
+            "get": {
+                "description": "1.1.4 获取组合表现数据",
+                "operationId": "getCollectionPerformance",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合 Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "投资组合表现数据 response",
+                        "schema": {
+                            "$ref": "#/definitions/collectionPerformance"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{id}/transactions": {
+            "get": {
+                "description": "1.1.6 获取组合记账历史",
+                "operationId": "getCollectionTransactions",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合 Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "组合记账历史数据 response",
+                        "schema": {
+                            "$ref": "#/definitions/collectionTransactions"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{id}/investments": {
+            "post": {
+                "description": "1.1.1.1 申购一个新的基金",
+                "operationId": "createInvestment",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "组合 Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "investment",
+                        "in": "body",
+                        "description": "申购新的基金",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/investment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "保存后的投资单元 response",
+                        "schema": {
+                            "$ref": "#/definitions/investment"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/analyse": {
+            "post": {
+                "description": "1.1.5.1 分析组合",
+                "operationId": "recommendExistCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "investments",
+                        "in": "body",
+                        "description": "可与目前多特网数据结构相同",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/investment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "可与目前多特网数据结构相同"
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/analyse/recommend/exist": {
+            "post": {
+                "description": "1.1.5.2 优化组合",
+                "operationId": "recommendExistCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "investments",
+                        "in": "body",
+                        "description": "可与目前多特网数据结构相同",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/investment"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "组合优化方案数据 response",
+                        "schema": {
+                            "$ref": "#/definitions/recommendation"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/analyse/recommend/new": {
+            "post": {
+                "description": "1.1.7.1 定制组合",
+                "operationId": "recommendNewCollection",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "investments",
+                        "in": "body",
+                        "description": "可与目前多特网数据结构相同",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/recommendSetting"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "组合推荐方案数据 response",
+                        "schema": {
+                            "$ref": "#/definitions/recommendation"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/collections/{cid}/investments/{iid}": {
+            "put": {
+                "description": "1.1.1.1 增持基金",
+                "operationId": "updateInvestment",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "cid",
+                        "in": "path",
+                        "description": "组合 Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "iid",
+                        "in": "path",
+                        "description": "投资单元 Id",
+                        "required": true,
+                        "type": "integer",
+                        "format": "int64"
+                    },
+                    {
+                        "name": "option",
+                        "in": "body",
+                        "description": "申购、赎回、转换",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/investmentModifyOption"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "保存后的投资单元 response",
+                        "schema": {
+                            "$ref": "#/definitions/investment"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/search/fund": {
+            "get": {
+                "description": "1.2 搜索基金",
+                "operationId": "searchFund",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "query",
+                        "in": "query",
+                        "description": "基金名称／基金编码",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "基金搜索结果 response",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/fundSearchResult"
+                            }
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        },
+        "/fund/{id}": {
+            "get": {
+                "description": "1.3 基金详细",
+                "operationId": "getFundById",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "基金ID",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "基金详细 response",
+                        "schema": {
+                            "$ref": "#/definitions/fund"
+                        }
+                    },
+                    "default": {
+                        "description": "unexpected error",
+                        "schema": {
+                            "$ref": "#/definitions/errorModel"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "collection": {
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "组合的ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "组合的名称"
+                },
+                "portfolio": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/investment"
+                    }
+                }
+            }
+        },
+        "collectionPerformance": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "组合的ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "组合的名称"
+                },
+                "healthScore": {
+                    "type": "integer",
+                    "description": "组合健康指数"
+                },
+                "rank": {
+                    "type": "integer",
+                    "description": "组合排名"
+                },
+                "profitPeriods": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/profitPeriod"
+                    }
+                },
+                "profitHistory": {
+                    "type": "object",
+                    "description": "可与目前多特网的历史数据的数据结构一样"
+                }
+            }
+        },
+        "collectionTransactions": {
+            "required": [
+                "id"
+            ],
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "记账记录ID"
+                },
+                "datetime": {
+                    "type": "string",
+                    "format": "datetime"
+                },
+                "FundId": {
+                    "type": "string",
+                    "description": "基金ID"
+                },
+                "fundName": {
+                    "type": "string",
+                    "description": "基金名称"
+                },
+                "fundCode": {
+                    "type": "string",
+                    "description": "基金代码"
+                },
+                "changedAmount": {
+                    "type": "integer",
+                    "description": "变化的金额"
+                },
+                "changedVolumn": {
+                    "type": "integer",
+                    "description": "变化的份额"
+                },
+                "type": {
+                    "type": "string",
+                    "description": "记账类别[申购、赎回、转换]"
+                }
+            }
+        },
+        "newCollectionParam": {
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "description": "组合的名称"
+                },
+                "portfolio": {
+                    "type": "array",
+                    "description": "组合的投资详细",
+                    "items": {
+                        "$ref": "#/definitions/investment"
+                    }
+                }
+            }
+        },
+        "investmentModifyOption": {
+            "required": [
+                "fundId"
+            ],
+            "properties": {
+                "fundId": {
+                    "type": "integer"
+                },
+                "option": {
+                    "type": "string",
+                    "description": "[buy, sell, convert] 申购、赎回、转换，其中一个"
+                },
+                "amount": {
+                    "type": "integer"
+                }
+            }
+        },
+        "profitPeriod": {
+            "properties": {
+                "period": {
+                    "type": "string",
+                    "description": "[day, week, month, year, total] 显示天、最近一周、最近一月、最近一年、累计的回报"
+                },
+                "profit": {
+                    "type": "number"
+                }
+            }
+        },
+        "investment": {
+            "required": [
+                "fundId",
+                "fundNav",
+                "volumn",
+                "amount"
+            ],
+            "properties": {
+                "fundId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的ID"
+                },
+                "fundName": {
+                    "type": "string",
+                    "description": "基金的名称"
+                },
+                "fundNav": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的净值"
+                },
+                "volumn": {
+                    "type": "integer",
+                    "description": "份额"
+                },
+                "amount": {
+                    "type": "integer",
+                    "description": "总投资金额"
+                },
+                "growthInLastThreeMonth": {
+                    "type": "number",
+                    "description": "最近三个月回报"
+                }
+            }
+        },
+        "fundSearchResult": {
+            "properties": {
+                "fundId": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的ID"
+                },
+                "fundName": {
+                    "type": "string",
+                    "description": "基金的名称"
+                },
+                "fundCode": {
+                    "type": "string",
+                    "description": "基金编码"
+                },
+                "fundNav": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的净值"
+                },
+                "growthInLastThreeMonth": {
+                    "type": "number",
+                    "description": "最近三个月回报"
+                }
+            }
+        },
+        "fund": {
+            "properties": {
+                "id": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的ID"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "基金的名称"
+                },
+                "code": {
+                    "type": "string",
+                    "description": "基金编码"
+                },
+                "nav": {
+                    "type": "integer",
+                    "format": "int64",
+                    "description": "基金的净值"
+                },
+                "navDate": {
+                    "type": "string",
+                    "format": "date"
+                },
+                "growthInLastThreeMonth": {
+                    "type": "number",
+                    "description": "最近三个月回报"
+                },
+                "risk": {
+                    "type": "number"
+                },
+                "performance": {
+                    "type": "object",
+                    "description": "可与目前多特网的历史数据的数据结构一样"
+                },
+                "assets": {
+                    "type": "object",
+                    "description": "可与目前多特网的资产比例的数据结构一样"
+                }
+            }
+        },
+        "recommendation": {
+            "properties": {
+                "assets": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/recommendationAsset"
+                    }
+                }
+            }
+        },
+        "recommendationAsset": {
+            "properties": {
+                "type": {
+                    "type": "string",
+                    "description": "资产类别"
+                },
+                "ratio": {
+                    "type": "number",
+                    "description": "比例"
+                },
+                "suggestedFunds": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/fundSearchResult"
+                    }
+                }
+            }
+        },
+        "recommendSetting": {
+            "properties": {
+                "investPeriod": {
+                    "type": "string",
+                    "description": "投资期限"
+                },
+                "risk": {
+                    "type": "number",
+                    "description": "风险登记"
+                }
+            }
+        },
+        "errorModel": {
+            "required": [
+                "code",
+                "message"
+            ],
+            "properties": {
+                "code": {
+                    "type": "integer",
+                    "format": "int32"
+                },
+                "message": {
+                    "type": "string"
+                }
+            }
+        }
+    }
+}
